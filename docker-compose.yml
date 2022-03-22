@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:v1.75.0
+    container_name: metrics
+    restart: unless-stopped
+    ports:
+      - 8428:8428
+    volumes:
+      - metrics-data:/storage
+    command:
+      - "--storageDataPath=/storage"
+      - "--httpListenAddr=:8428"
+
+  vmagent:
+    image: victoriametrics/vmagent:v1.75.0
+    container_name: agent
+    restart: unless-stopped
+    ports:
+      - 8429:8429
+    volumes:
+      - agent-data:/vmagentdata
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--promscrape.config=/etc/prometheus/prometheus.yml"
+      - "--remoteWrite.url=http://victoriametrics:8428/api/v1/write"
+    depends_on:
+      - victoriametrics
+
+  vmalert:
+    image: victoriametrics/vmalert:v1.75.0
+    container_name: alert
+    restart: unless-stopped
+    ports:
+      - 8880:8880
+    volumes:
+      - ./alerts.yml:/etc/alerts/alerts.yml
+    command:
+      - "--datasource.url=http://victoriametrics:8428/"
+      - "--remoteRead.url=http://victoriametrics:8428/"
+      - "--remoteWrite.url=http://victoriametrics:8428/"
+      - "--notifier.url=http://alertmanager:9093/"
+      - "--rule=/etc/alerts/*.yml"
+      - "--external.url=http://127.0.0.1:3000" #grafana outside container
+      ## when copypaste the line be aware of '$$' for escaping in '$expr'
+      - '--external.alert.source=explore?orgId=1&left=["now-1h","now","VictoriaMetrics",{"expr":"{{$$expr|quotesEscape|crlfEscape|queryEscape}}"},{"mode":"Metrics"},{"ui":[true,true,true,"none"]}]'
+    depends_on:
+      - victoriametrics
+      - alertmanager
+
+  alertmanager:
+    image: prom/alertmanager:v0.23.0
+    container_name: alert-prom
+    restart: unless-stopped
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager.yml:/config/alertmanager.yml
+      - alertmanager_data:/alertmanager/
+    command:
+      - "--config.file=/config/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+      - "--log.level=debug"
+
+volumes:
+  metrics-data: {}
+  agent-data: {}
+  alertmanager_data: {}

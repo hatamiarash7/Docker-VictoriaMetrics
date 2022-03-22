@@ -1,6 +1,6 @@
 # VictoriaMetrics
 
-![logo](logo.png)
+<img src="logo.png" width="400" alt="VictoriaMetrics logo">
 
 VictoriaMetrics is a fast, cost-effective and scalable monitoring solution and time series database.
 

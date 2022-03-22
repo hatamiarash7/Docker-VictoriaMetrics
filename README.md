@@ -12,6 +12,10 @@ Config stack using YAML files and run :
 docker compose up -d
 ```
 
+## Alerts
+
+There are some default alert rules in `alerts.yml`. You can customize them to suit your needs
+
 ---
 
 ## Support

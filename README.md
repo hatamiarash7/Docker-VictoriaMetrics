@@ -16,6 +16,10 @@ docker compose up -d
 
 There are some default alert rules in `alerts.yml`. You can customize them to suit your needs
 
+## Alert receivers
+
+We have a `blackholed` receiver here. Add your receiver for production ( SMTP, Telegram, Webhook, etc )
+
 ---
 
 ## Support

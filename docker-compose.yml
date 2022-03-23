@@ -42,7 +42,7 @@ services:
       - "--remoteWrite.url=http://victoriametrics:8428/"
       - "--notifier.url=http://alertmanager:9093/"
       - "--rule=/etc/alerts/*.yml"
-      - "--external.url=http://127.0.0.1:3000" #grafana outside container
+      - "--external.url=http://grafana:3000" #grafana outside container
       ## when copypaste the line be aware of '$$' for escaping in '$expr'
       - '--external.alert.source=explore?orgId=1&left=["now-1h","now","VictoriaMetrics",{"expr":"{{$$expr|quotesEscape|crlfEscape|queryEscape}}"},{"mode":"Metrics"},{"ui":[true,true,true,"none"]}]'
     depends_on:

@@ -21,9 +21,9 @@ services:
       - 8429:8429
     volumes:
       - agent-data:/vmagentdata
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./agent.yml:/config/agent.yml
     command:
-      - "--promscrape.config=/etc/prometheus/prometheus.yml"
+      - "--promscrape.config=/config/agent.yml"
       - "--remoteWrite.url=http://victoriametrics:8428/api/v1/write"
     depends_on:
       - victoriametrics
@@ -63,7 +63,23 @@ services:
       - "--storage.path=/alertmanager"
       - "--log.level=debug"
 
+  grafana:
+    image: grafana/grafana:8.4.3
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - 8004:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - victoriametrics
+
 volumes:
   metrics-data: {}
   agent-data: {}
   alertmanager_data: {}
+  grafana_data: {}

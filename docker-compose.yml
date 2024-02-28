@@ -50,7 +50,7 @@ services:
       - alertmanager
 
   alertmanager:
-    image: prom/alertmanager:v0.24.0
+    image: prom/alertmanager:v0.27.0
     container_name: alert-prom
     restart: unless-stopped
     ports:

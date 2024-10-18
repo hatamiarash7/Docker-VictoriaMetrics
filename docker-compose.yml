@@ -14,7 +14,7 @@ services:
       - "--httpListenAddr=:8428"
 
   vmagent:
-    image: victoriametrics/vmagent:v1.75.0
+    image: victoriametrics/vmagent:v1.105.0
     container_name: agent
     restart: unless-stopped
     ports:

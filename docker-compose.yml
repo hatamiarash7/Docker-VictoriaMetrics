@@ -29,7 +29,7 @@ services:
       - victoriametrics
 
   vmalert:
-    image: victoriametrics/vmalert:v1.75.0
+    image: victoriametrics/vmalert:v1.105.0
     container_name: alert
     restart: unless-stopped
     ports:

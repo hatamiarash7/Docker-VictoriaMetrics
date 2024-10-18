@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   victoriametrics:
-    image: victoriametrics/victoria-metrics:v1.75.0
+    image: victoriametrics/victoria-metrics:v1.105.0
     container_name: metrics
     restart: unless-stopped
     ports:
